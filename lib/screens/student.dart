@@ -304,7 +304,9 @@ class _LessonState extends State<LessonScreen> {
   void onTick() {
     final v = vc!.value; if (mounted) setState(() {});
     if (v.duration.inSeconds == 0 || completed) return;
-    if (v.position.inSeconds / v.duration.inSeconds >= .9) complete(auto: true);
+    if (v.position.inSeconds / v.duration.inSeconds >= .9) {
+      complete(auto: true);
+    }
     else if (DateTime.now().difference(_lastSync).inSeconds > 20) { _lastSync = DateTime.now(); Api.i.progress(widget.id, false, v.position.inSeconds).catchError((_) => <String, dynamic>{}); }
   }
   Future<void> complete({bool auto = false}) async {
@@ -331,7 +333,7 @@ class _LessonState extends State<LessonScreen> {
         ])),
         Row(children: [
           Text(fmt(v.position), style: numStyle(size: 12)),
-          Expanded(child: Slider(activeColor: C.primary, value: v.position.inMilliseconds.clamp(0, v.duration.inMilliseconds).toDouble(), max: v.duration.inMilliseconds.toDouble().clamp(1, double.infinity), onChanged: (x) => vc!.seekTo(Duration(milliseconds: x.toInt())))),
+          Expanded(child: Slider(activeColor: C.primary, value: v.position.inMilliseconds.clamp(0, v.duration.inMilliseconds).toDouble(), max: v.duration.inMilliseconds.toDouble().clamp(1, double.infinity).toDouble(), onChanged: (x) => vc!.seekTo(Duration(milliseconds: x.toInt())))),
           Text(fmt(v.duration), style: numStyle(size: 12)),
           PopupMenuButton<double>(icon: Text('${speed}x', style: numStyle(size: 13, color: C.primary)), onSelected: (s) { setState(() => speed = s); vc!.setPlaybackSpeed(s); },
               itemBuilder: (_) => [for (final s in const [.75, 1.0, 1.25, 1.5, 2.0]) PopupMenuItem(value: s, child: Text('${s}x', style: numStyle(size: 14)))]),

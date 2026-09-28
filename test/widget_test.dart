@@ -1,15 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:oxford_flutter_app/main.dart';
+import 'package:tafra_learning/main.dart';
 
 void main() {
-  testWidgets('renders the Oxford visitor experience', (WidgetTester tester) async {
-    await tester.pumpWidget(const OxfordApp());
+  testWidgets('renders the Tafra authentication experience', (tester) async {
+    await tester.pumpWidget(const TafraApp());
+    await tester.pump();
 
-    expect(find.text('اتصفح طريقك\nقبل أن تسجّل.'), findsOneWidget);
-    expect(find.text('12k+  طالب يتعلمون بهدوء     48  مسار متاح'), findsOneWidget);
-    await tester.tap(find.text('تسجيل الدخول').first);
-    await tester.pumpAndSettle();
-    expect(find.text('أهلًا بك من جديد'), findsOneWidget);
+    expect(find.text('طفرة التعليمية'), findsOneWidget);
+    expect(find.text('تسجيل الدخول'), findsOneWidget);
+    expect(find.text('البريد الإلكتروني'), findsOneWidget);
   });
 }

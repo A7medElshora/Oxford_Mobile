@@ -10,8 +10,11 @@ class Api {
   late final Dio dio;
   String? token;
   Api._() {
-    dio = Dio(BaseOptions(baseUrl: kBaseUrl, connectTimeout: const Duration(seconds: 15),
-        headers: {'Content-Type': 'application/json'}));
+    dio = Dio(BaseOptions(
+        baseUrl: kBaseUrl,
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 30),
+        headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}));
     dio.interceptors.add(InterceptorsWrapper(onRequest: (o, h) {
       if (token != null) o.headers['Authorization'] = 'Bearer $token';
       h.next(o);
@@ -37,7 +40,8 @@ class Api {
   Future<List<dynamic>> paymentMethods() async => await get('/payment-methods');
   Future<List<dynamic>> myEnrollments() async => await get('/student/enrollments');
   Future<void> enrollFree(int courseId) => post('/enrollments/free', {'courseId': courseId});
-  Future<Map> enrollManual(FormData f) async => Map.from((await dio.post('/enrollments/manual', data: f)).data);
+  Future<Map> enrollManual(FormData f) async => Map.from((await dio.post('/enrollments/manual', data: f,
+      options: Options(contentType: Headers.multipartFormDataContentType))).data);
   // Lessons
   Future<Map> lesson(int id) async => Map.from(await get('/lessons/$id'));
   Future<Map> progress(int id, bool completed, int seconds) async =>
